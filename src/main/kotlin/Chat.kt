@@ -1,21 +1,25 @@
 package ru.netology
 
-data class Chat(val userId: Any?) {
-    val messages: MutableList<Message> = mutableListOf()
+// Класс, представляющий чат
+data class Chat(val userId: Int?) {
+    val messages = mutableListOf<Message>()
 
+    // Метод для пометки всех сообщений как прочитанных
     fun readMessages() {
-        for (message in this.messages)
+        for (message in messages) {
             message.isRead = true
+        }
     }
 
-    fun unreadMessagesB(): Boolean {
+    // Метод для проверки наличия непрочитанных сообщений
+    fun hasUnreadMessages(): Boolean {
         return messages.filter { !it.isRead }.isEmpty()
     }
 
     override fun toString(): String {
-        var result: String = "[ chat "
-        messages.onEach { message ->
-            result += " $message"
+        var result = "[ Chat "
+        messages.forEach { message ->
+            result += "$message"
         }
         return result + "]"
     }
