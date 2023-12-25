@@ -20,5 +20,5 @@ fun main() {
     val lastMessages = service.getLastMessages(chatIds)
     println("Последние сообщения из чатов $chatIds: $lastMessages")
 
-    service.readMessagesFromChatById(userId, 2)
+    service.readMessagesFromChatById(setOf(userId), 2)
 }
