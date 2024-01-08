@@ -3,10 +3,10 @@ package ru.netology
 // Класс, представляющий сервис работы с чатами
 class ChatService {
     val chats = hashMapOf<Set<Int>, Chat>()
-
+    val messageLimit = 10
     override fun toString(): String {
         var result = "Состояние чатов:\n"
-        chats.forEach { (key, value) ->
+        chats.onEach { (key, value) ->
             result += "$key $value \n"
         }
         return result
@@ -24,7 +24,7 @@ class ChatService {
     // Метод для получения сообщений из чата по идентификатору пользователей
     fun getMessagesFromChat(userIds: Set<Int>): List<Message> {
         val chat = chats.filter { entry -> entry.key.containsAll(userIds) }.values.firstOrNull()
-        chat?.messages?.forEach { message -> message.isRead = true }
+        chat?.messages?.onEach { message -> message.isRead = true }
         return chat?.messages ?: emptyList()
     }
 
@@ -58,16 +58,14 @@ class ChatService {
     // Метод для получения последних сообщений из чатов
     fun getLastMessages(chatIds: List<Set<Int>>): List<String> {
         return chatIds.flatMap { chatId ->
-            val messageLimit = 10
-            getMessagesFromChat(chatId)
-                .reversed()
-                .take(messageLimit)
-                .mapNotNull { message ->
+
+            getMessagesFromChat(chatId).reversed().take(messageLimit).mapNotNull { message ->
                     message.text
                 }
         }
     }
-// Вот реализация метода readMessagesFromChatById, которая повторяет функциональность метода getMessagesFromChat,
+
+    // Вот реализация метода readMessagesFromChatById, которая повторяет функциональность метода getMessagesFromChat,
 // но также вставляет вызов метода take:
 // Метод для пометки сообщений в чате как прочитанных по идентификатору пользователя и количеству сообщений
     fun readMessagesFromChatById(userIds: Set<Int>, messageCount: Int): List<Message> {
@@ -76,7 +74,9 @@ class ChatService {
             .firstOrNull() // Если получившийся список пустой, то возвращаем null, если нет - берем только первый чат из него
             ?.messages // Взять сообщения из этого чата
             ?.takeLast(messageCount) // Взять messageCount с конца списка (если не хватит, то вернет сколько есть)
-            ?.onEach { message -> message.isRead = true } // На каждом элементе списка выполнить действие message.isRead = true (пометить прочитанным), onEach возвращает тот же список, на котором вызывался
+            ?.onEach { message ->
+                message.isRead = true
+            } // На каждом элементе списка выполнить действие message.isRead = true (пометить прочитанным), onEach возвращает тот же список, на котором вызывался
             ?: emptyList() // Если на каком-то шаге поймали null, то вернуть пустой список
 
     }
