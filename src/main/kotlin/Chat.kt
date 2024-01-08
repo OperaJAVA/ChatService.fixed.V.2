@@ -18,7 +18,7 @@ data class Chat(val userId: Int?) {
 
     override fun toString(): String {
         var result = "[ Chat "
-        messages.forEach { message ->
+        messages.onEach { message ->
             result += "$message"
         }
         return result + "]"
